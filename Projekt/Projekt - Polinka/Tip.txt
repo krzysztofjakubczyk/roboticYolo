@@ -1,7 +1,0 @@
-#build.gradle
-implementation 'androidx.annotation:annotation:1.2.0'
-
-minSDK 23
-Android level 31
-java 1_8
-

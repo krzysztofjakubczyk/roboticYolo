@@ -1,1 +1,0 @@
-package com.sanbot.demo.manager.model;import com.sanbot.net.NetApi;public abstract class Base {    protected NetApi mNetApi;    public Base() {        mNetApi = NetApi.getInstance();    }}
