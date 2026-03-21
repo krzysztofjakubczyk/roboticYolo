@@ -1,0 +1,2 @@
+0,VERSION,*,*,version <bot name="version"/>,update.aiml
+0,BUILD,*,*,<bot name="build"/>,update.aiml

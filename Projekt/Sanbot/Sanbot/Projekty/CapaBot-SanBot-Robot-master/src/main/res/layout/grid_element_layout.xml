@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:id="@+id/choice_base"
+    android:textSize="28sp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:minWidth="300dp"
+    android:minHeight="80dp"
+    android:text="@string/example_text"
+    android:textColor="@color/colorBlack"
+    android:background="@color/colorPrimaryLight"
+    android:shadowColor="@color/colorWhite"
+    android:shadowDx="2"
+    android:shadowDy="2"
+    android:gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

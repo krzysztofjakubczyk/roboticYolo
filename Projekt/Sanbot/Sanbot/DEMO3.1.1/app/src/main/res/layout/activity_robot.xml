@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingTop="16dp">
+
+    <Button
+        android:id="@+id/robot_select_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/robot_select" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <SurfaceView
+            android:id="@+id/robot_video_sv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:id="@+id/robot_player_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/common_play"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+    <RadioGroup
+        android:id="@+id/robot_body_rg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/robot_header_rb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="@string/common_head" />
+
+        <RadioButton
+            android:id="@+id/robot_left_hand_rb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/common_left_hand" />
+
+        <RadioButton
+            android:id="@+id/robot_right_hand_rb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/common_right_hand" />
+
+        <RadioButton
+            android:id="@+id/robot_footer_rb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/common_foot" />
+
+    </RadioGroup>
+
+
+    <com.sanbot.lib.view.ControlView
+        android:id="@+id/robot_control_cv"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#EEEEEE"/>
+
+    <!--<Button
+        android:id="@+id/robot_up_btn"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="上" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/robot_left_btn"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="左" />
+
+        <Button
+            android:id="@+id/robot_stop_btn"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="停" />
+
+        <Button
+            android:id="@+id/robot_right_btn"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="右" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/robot_down_btn"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:text="下" />-->
+
+</LinearLayout>

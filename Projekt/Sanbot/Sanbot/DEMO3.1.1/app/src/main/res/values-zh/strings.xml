@@ -1,0 +1,90 @@
+<resources>
+    <string name="app_name">QlinkDemo</string>
+    <string name="auth_phone">手机号码</string>
+    <string name="auth_identify">验证码</string>
+    <string name="auth_identify_get">获取验证码</string>
+    <string name="auth_identify_retry">重新获取</string>
+    <string name="auth_identify_send_success">发送成功</string>
+    <string name="auth_identify_send_failed">发送失败</string>
+    <string name="auth_new_password">新密码</string>
+    <string name="friend_remarks_hint">请输入备注名</string>
+    <string name="friend_lists">好友列表</string>
+    <string name="friend_detail">详情</string>
+    <string name="friend_of_mine">我的好友</string>
+    <string name="robot_lists">机器人</string>
+    <string name="robot_select">选择机器人</string>
+    <string name="robot_select_tip">请选择机器人</string>
+    <string name="robot_select_part_tip">请选择移动部位</string>
+    <string name="chat_input_tip">输入内容</string>
+    <string name="chat_send">发送</string>
+    <string name="chat_image">图片</string>
+    <string name="chat_video">视频聊天</string>
+    <string name="chat_audio">音频聊天</string>
+    <string name="chat_session">会话</string>
+    <string name="chat_friend">朋友</string>
+    <string name="chat_select_tip">最多只能选%1$d张</string>
+    <string name="chat_response_agree">对方同意</string>
+    <string name="chat_response_refuse">对方拒绝</string>
+    <string name="chat_response_cancel">对方取消</string>
+    <string name="chat_response_busy">对方正在通话中</string>
+    <string name="chat_refuse">我拒绝</string>
+    <string name="chat_request_video">正在请求与 %1$d 视频聊天</string>
+    <string name="chat_get_request_video">%1$d 对方请求与你视频聊天</string>
+
+    <string name="auth_account">帐号</string>
+    <string name="auth_password">密码</string>
+    <string name="auth_login">登录</string>
+    <string name="auth_register">注册</string>
+    <string name="auth_forget_password">忘记密码</string>
+    <string name="auth_login_by_identify">验证码登录</string>
+    <string name="auth_login_success">登录成功</string>
+    <string name="auth_login_failed">登录失败</string>
+    <string name="auth_phone_empty_tip">手机号码不能为空</string>
+    <string name="auth_password_empty_tip">密码不能为空</string>
+    <string name="auth_identify_empty_tip">验证码不能为空</string>
+    <string name="auth_identify_error_tip">验证码不匹配</string>
+    <string name="auth_phone_error_tip">手机号码不正确</string>
+    <string name="auth_account_error_tip">帐号格式错误</string>
+    <string name="auth_update_success">修改成功</string>
+    <string name="auth_login_by_identify_tip">需要验证码登录</string>
+    <string name="auth_password_error">密码不正确</string>
+    <string name="auth_account_or_password_empty_tip">帐号/手机号码不能为空</string>
+    <string name="auth_account_not_exist_tip">帐号不存在</string>
+    <string name="auth_register_already_tip">已经注册</string>
+    <string name="auth_register_done_tip">注册成功</string>
+
+    <string name="video_refuse">拒绝</string>
+    <string name="video_cancel">取消</string>
+    <string name="video_pass">通过</string>
+    <string name="video_switch">切换</string>
+    <string name="video_pause">暂停</string>
+    <string name="video_play">播放</string>
+    <string name="video_be_used_already">已被使用</string>
+    <string name="video_max_connect">超过最大连接数</string>
+    <string name="video_robot_offline">设备不在线</string>
+
+    <string name="forget_password_title">忘记密码</string>
+
+
+    <string name="main_message">消息</string>
+    <string name="main_life">生活</string>
+    <string name="main_robot">机器</string>
+    <string name="main_my">我的</string>
+
+    <string name="search">搜索</string>
+    <string name="qh_select_country">选择国家/地区</string>
+    <string name="qh_loss_of_data">数据丢失</string>
+
+    <string name="common_no_more">没有更多</string>
+    <string name="common_ok">确定</string>
+    <string name="common_update">修改</string>
+    <string name="common_finish">完成</string>
+    <string name="common_play">播放</string>
+    <string name="common_head">头</string>
+    <string name="common_left_hand">左手</string>
+    <string name="common_right_hand">右手</string>
+    <string name="common_foot">脚</string>
+    <string name="common_empty_tip">里面好像什么都没有</string>
+    <string name="common_unknow_error">未知错误</string>
+    <string name="common_no_read_permission">没有读取权限</string>
+</resources>

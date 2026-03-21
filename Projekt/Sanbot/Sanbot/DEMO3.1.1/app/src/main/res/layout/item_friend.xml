@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_button_white">
+
+    <com.sanbot.lib.view.CircleImageView
+        android:id="@+id/item_friend_iv"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/ic_launcher"
+        android:scaleType="centerCrop"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:border_width="0dp"
+        app:border_color="@color/colorTransparent"/>
+
+    <TextView
+        android:id="@+id/item_friend_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:layout_toRightOf="@id/item_friend_iv"
+        android:layout_centerVertical="true"
+        android:textSize="14sp"
+        android:textColor="@color/colorBlack"
+        android:layout_marginRight="16dp"/>
+
+    <Button
+        android:id="@+id/item_friend_detail_btn"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:text="@string/friend_detail"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"/>
+
+    <include layout="@layout/divider_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

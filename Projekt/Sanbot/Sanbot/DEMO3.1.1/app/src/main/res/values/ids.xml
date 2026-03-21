@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="image_view_object" type="id" />
+    <item name="image_view_file_id" type="id" />
+    <item name="image_view_default_id" type="id" />
+    <item name="image_view_file_type" type="id" />
+    <item name="image_view_width" type="id" />
+    <item name="image_view_height" type="id" />
+    <item name="image_cache_key" type="id"></item>
+
+    <item name="status_bar_view" type="id" />
+    <item name="text_view_long_click" type="id" />
+
+    <item name="selected_view" type="id" />
+    <item name="mcv_pager" type="id" />
+    <item name="basic_app_adapter" type="id" />
+    <item name="smart_life_app_adapter" type="id" />
+    <item name="mps_robot_list" type="id" />
+    <item name="mps_material_logo_cache" type="id" />
+    <item name="model_id" type="id" />
+</resources>

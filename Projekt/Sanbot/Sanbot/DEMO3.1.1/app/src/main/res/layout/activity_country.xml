@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/colorLightGray"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
+
+        <com.sanbot.lib.view.ClearEditText
+            android:id="@+id/country_search_et"
+            style="@style/EditTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_et_white"
+            android:hint="@string/search"/>
+
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/country_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:layout_marginRight="45dp"/>
+
+
+        <com.sanbot.lib.view.IndexView
+            android:id="@+id/country_letter_iv"
+            android:layout_width="@dimen/x_90"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:layout_gravity="right"/>
+
+    </FrameLayout>
+
+
+</LinearLayout>
