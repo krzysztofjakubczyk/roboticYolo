@@ -1,247 +1,245 @@
 package com.example.polinav3.video;
 
-
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
+import android.media.Image;
+import android.media.ImageReader;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
-import android.view.Surface;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * Responsible for video decoding and display
- */
 public class VisionMediaDecoder {
-    private String TAG = "decoder：";
+    public interface FrameListener {
+        void onFrame(Bitmap frame);
+    }
 
-    /**
-     * Decoding timeout
-     */
-    private long decodeTimeout = 10000;
+    private static final String TAG = "VisionMediaDecoder";
+    private static final long DECODE_TIMEOUT_US = 10000;
 
-    /**
-     * lock.
-     */
-    private Lock lock = new ReentrantLock();
+    private final Lock lock = new ReentrantLock();
+    private final FrameListener frameListener;
 
-    /**
-     * Related video shows?
-     */
-    private Surface surface;
-
-    /**
-     * Video information.
-     */
-    private MediaCodec.BufferInfo videoBufferInfo = new MediaCodec.BufferInfo();
-
-    /**
-     * Video decoder
-     */
     private MediaCodec videoDecoder;
-
-    /**
-     * Video height.
-     */
-    private int videoHeight = 0;
-
-    /**
-     * Current video buffer
-     */
+    private MediaCodec.BufferInfo videoBufferInfo = new MediaCodec.BufferInfo();
+    private ImageReader imageReader;
+    private HandlerThread imageThread;
+    private Handler imageHandler;
     private ByteBuffer[] videoInputBuffers;
-
-    /**
-     * MIME type of current video
-     */
     private String videoMimeType = "video/avc";
+    private int videoWidth;
+    private int videoHeight;
 
-    /**
-     * video width
-     */
-    private int videoWidth = 0;
+    public VisionMediaDecoder(FrameListener frameListener) {
+        this.frameListener = frameListener;
+    }
 
-    /**
-     * Decode and display the video stream
-     *
-     */
     public void drawVideoSample(ByteBuffer sampleData) {
         try {
             lock.lock();
             if (videoDecoder == null) {
                 return;
             }
-            // put sample data
-            int inIndex = videoDecoder.dequeueInputBuffer(decodeTimeout);
-            if (inIndex >= 0) {
-                ByteBuffer buffer = videoInputBuffers[inIndex];
+
+            int inputIndex = videoDecoder.dequeueInputBuffer(DECODE_TIMEOUT_US);
+            if (inputIndex >= 0) {
+                ByteBuffer buffer = videoInputBuffers[inputIndex];
                 int sampleSize = sampleData.limit();
                 buffer.clear();
                 buffer.put(sampleData);
                 buffer.flip();
-                // Log.i("DecodeActivity", "" + buffer.toString());
-                Log.i(TAG, "showVideo: Get the video pointer position！");
-                videoDecoder.queueInputBuffer(inIndex, 0, sampleSize, 0, 0);
+                videoDecoder.queueInputBuffer(inputIndex, 0, sampleSize, 0, 0);
             }
-            // output, 1 microseconds = 100,0000 / 1 second
-            int ret = videoDecoder.dequeueOutputBuffer(videoBufferInfo,
-                    decodeTimeout);
-            int size = videoBufferInfo.size;
-            if (ret < 0) {
-                onDecodingError(ret);
-                return;
+
+            int outputIndex = videoDecoder.dequeueOutputBuffer(videoBufferInfo, DECODE_TIMEOUT_US);
+            if (outputIndex >= 0) {
+                videoDecoder.releaseOutputBuffer(outputIndex, true);
+            } else {
+                onDecodingInfo(outputIndex);
             }
-            videoDecoder.releaseOutputBuffer(ret, true);
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Log.e(TAG, "Decoder error", e);
             stopDecoding();
         } finally {
             lock.unlock();
         }
-
     }
 
-    /**
-     * @return the surface
-     */
-    public Surface getSurface() {
-        return surface;
-    }
-
-    /**
-     * @return the videoHeight
-     */
-    public int getVideoHeight() {
-        return videoHeight;
-    }
-
-    /**
-     * @return the videoWidth
-     */
-    public int getVideoWidth() {
-        return videoWidth;
-    }
-
-    private void onDecodingError(int index) {
-        switch (index) {
-            case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
-                Log.e(TAG, "onDecodingError: The output buffers have changed");
-                // The output buffers have changed, the client must refer to the
-                // new
-                // set of output buffers returned by getOutputBuffers() from
-                // this
-                // point on.
-                // outputBuffers = decoder.getOutputBuffers();
-                break;
-
-            case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
-                Log.d(TAG, "New format: " + videoDecoder.getOutputFormat());
-                // The output format has changed, subsequent data will follow
-                // the
-                // new format. getOutputFormat() returns the new format.
-                break;
-
-            case MediaCodec.INFO_TRY_AGAIN_LATER:
-                Log.d(TAG, "dequeueOutputBuffer timed out!");
-                // If a non-negative timeout had been specified in the call to
-                // dequeueOutputBuffer(MediaCodec.BufferInfo, long), indicates
-                // that
-                // the call timed out.
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    /**
-     * When it comes to the synchronization of the media stream, it is the key frame.
-     *
-     * @param
-     */
     public void onCreateCodec(int width, int height) {
-        setVideoWidth(width);
-        setVideoHeight(height);
+        videoWidth = width;
+        videoHeight = height;
         stopDecoding();
-        // Initialize the decoder
         startDecoding();
     }
 
-    /**
-     * @param surface the surface to set
-     */
-    public void setSurface(Surface surface) {
-        this.surface = surface;
-    }
-
-    /**
-     * @param videoHeight the videoHeight to set
-     */
-    public void setVideoHeight(int videoHeight) {
-        this.videoHeight = videoHeight;
-    }
-
-    /**
-     * @param videoWidth the videoWidth to set
-     */
-    public void setVideoWidth(int videoWidth) {
-        this.videoWidth = videoWidth;
-    }
-
-    /**
-     * create decoder
-     */
     public boolean startDecoding() {
         try {
             lock.lock();
-            if (videoInputBuffers != null) {
-                Log.w(TAG, "startDecoding: videoInputBuffers already created!");
-                return false;
-            } else if (videoDecoder != null) {
-                Log.w(TAG, "startDecoding: videoDecoder already created!");
+            if (videoDecoder != null || videoInputBuffers != null) {
                 return false;
             }
-            MediaFormat format = MediaFormat.createVideoFormat(videoMimeType, getVideoWidth(), getVideoHeight());
-            Log.i(TAG, "format:" + format);
+
+            imageThread = new HandlerThread("VisionImageReader");
+            imageThread.start();
+            imageHandler = new Handler(imageThread.getLooper());
+            imageReader = ImageReader.newInstance(videoWidth, videoHeight, ImageFormat.YUV_420_888, 2);
+            imageReader.setOnImageAvailableListener(this::onImageAvailable, imageHandler);
+
+            MediaFormat format = MediaFormat.createVideoFormat(videoMimeType, videoWidth, videoHeight);
             format.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
             format.setInteger(MediaFormat.KEY_SAMPLE_RATE, 44100);
             format.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
             format.setInteger(MediaFormat.KEY_BIT_RATE, 64000);
-            try {
-                videoDecoder = MediaCodec.createDecoderByType(videoMimeType);
-                videoDecoder.configure(format, getSurface(), null, 0);
-                videoDecoder.start();
-            } catch (IOException | IllegalStateException e) {
-                e.printStackTrace();
-            }
+
+            videoDecoder = MediaCodec.createDecoderByType(videoMimeType);
+            videoDecoder.configure(format, imageReader.getSurface(), null, 0);
+            videoDecoder.start();
             videoInputBuffers = videoDecoder.getInputBuffers();
+            Log.i(TAG, "Decoder started: " + videoWidth + "x" + videoHeight);
+            return true;
+        } catch (IOException | IllegalStateException e) {
+            Log.e(TAG, "Cannot start decoder", e);
+            stopDecoding();
+            return false;
         } finally {
-            Log.e("CODEC", "onCreateCodec");
             lock.unlock();
         }
-        return true;
     }
 
-    /**
-     * stop decoding.
-     */
     public void stopDecoding() {
         try {
             lock.lock();
             if (videoDecoder != null) {
-                videoDecoder.stop();
+                try {
+                    videoDecoder.stop();
+                } catch (IllegalStateException ignored) {
+                }
                 videoDecoder.release();
                 videoDecoder = null;
-
-                Log.i(TAG, "stopDecoding");
             }
             videoInputBuffers = null;
+
+            if (imageReader != null) {
+                imageReader.close();
+                imageReader = null;
+            }
+            if (imageThread != null) {
+                imageThread.quitSafely();
+                imageThread = null;
+                imageHandler = null;
+            }
         } finally {
-            Log.e("CODEC", "stopDecoding");
             lock.unlock();
         }
     }
 
+    private void onImageAvailable(ImageReader reader) {
+        Image image = null;
+        try {
+            image = reader.acquireLatestImage();
+            if (image == null || frameListener == null) {
+                return;
+            }
+
+            Bitmap bitmap = imageToBitmap(image);
+            if (bitmap != null) {
+                frameListener.onFrame(bitmap);
+            }
+        } catch (RuntimeException e) {
+            Log.e(TAG, "Cannot read decoded frame", e);
+        } finally {
+            if (image != null) {
+                image.close();
+            }
+        }
+    }
+
+    private Bitmap imageToBitmap(Image image) {
+        byte[] nv21 = yuv420ToNv21(image);
+        YuvImage yuvImage = new YuvImage(nv21, ImageFormat.NV21, image.getWidth(), image.getHeight(), null);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        yuvImage.compressToJpeg(new Rect(0, 0, image.getWidth(), image.getHeight()), 80, out);
+        byte[] jpegBytes = out.toByteArray();
+        return BitmapFactory.decodeByteArray(jpegBytes, 0, jpegBytes.length);
+    }
+
+    private byte[] yuv420ToNv21(Image image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int ySize = width * height;
+        byte[] nv21 = new byte[ySize + ySize / 2];
+
+        copyPlane(image.getPlanes()[0], width, height, nv21, 0, 1);
+        interleaveChromaPlanes(image.getPlanes()[1], image.getPlanes()[2], width, height, nv21, ySize);
+        return nv21;
+    }
+
+    private void copyPlane(Image.Plane plane, int width, int height, byte[] output, int offset, int pixelStrideOut) {
+        ByteBuffer buffer = plane.getBuffer();
+        int rowStride = plane.getRowStride();
+        int pixelStride = plane.getPixelStride();
+        byte[] row = new byte[rowStride];
+        int outputIndex = offset;
+
+        for (int rowIndex = 0; rowIndex < height; rowIndex++) {
+            int length = Math.min(rowStride, buffer.remaining());
+            buffer.get(row, 0, length);
+            for (int col = 0; col < width; col++) {
+                output[outputIndex] = row[col * pixelStride];
+                outputIndex += pixelStrideOut;
+            }
+        }
+    }
+
+    private void interleaveChromaPlanes(
+            Image.Plane uPlane,
+            Image.Plane vPlane,
+            int width,
+            int height,
+            byte[] output,
+            int offset
+    ) {
+        ByteBuffer uBuffer = uPlane.getBuffer();
+        ByteBuffer vBuffer = vPlane.getBuffer();
+        int chromaWidth = width / 2;
+        int chromaHeight = height / 2;
+        int uRowStride = uPlane.getRowStride();
+        int vRowStride = vPlane.getRowStride();
+        int uPixelStride = uPlane.getPixelStride();
+        int vPixelStride = vPlane.getPixelStride();
+        byte[] uRow = new byte[uRowStride];
+        byte[] vRow = new byte[vRowStride];
+        int outputIndex = offset;
+
+        for (int rowIndex = 0; rowIndex < chromaHeight; rowIndex++) {
+            int uLength = Math.min(uRowStride, uBuffer.remaining());
+            int vLength = Math.min(vRowStride, vBuffer.remaining());
+            uBuffer.get(uRow, 0, uLength);
+            vBuffer.get(vRow, 0, vLength);
+
+            for (int col = 0; col < chromaWidth; col++) {
+                output[outputIndex++] = vRow[col * vPixelStride];
+                output[outputIndex++] = uRow[col * uPixelStride];
+            }
+        }
+    }
+
+    private void onDecodingInfo(int index) {
+        if (index == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED && videoDecoder != null) {
+            Log.d(TAG, "New decoder format: " + videoDecoder.getOutputFormat());
+        } else if (index == MediaCodec.INFO_TRY_AGAIN_LATER) {
+            Log.d(TAG, "Decoder output timed out");
+        }
+    }
 }

@@ -9,10 +9,9 @@ import com.sanbot.opensdk.function.unit.interfaces.media.MediaStreamListener;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import android.view.Surface;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 
 public class MediaStreamManager {
 
@@ -29,7 +28,7 @@ public class MediaStreamManager {
         setupMediaListener();
     }
 
-    public void openStream(Surface surface) {
+    public void openStream(Object unusedSurface) {
         //Set parameters and open the media stream for video
         StreamOption streamOption = new StreamOption();
         streamOption.setChannel(StreamOption.MAIN_STREAM);
@@ -43,16 +42,14 @@ public class MediaStreamManager {
                 handleList = new ArrayList<>();
             }
             handleList.add(result);
-            mediaDecoder.setSurface(surface);
         }
-        //mediaDecoder.setSurface(holder.getSurface());
     }
 
-    public void changeSurface(Surface surface, int format, int width, int height) {
+    public void changeSurface(Object unusedSurface, int format, int width, int height) {
 
     }
 
-    public void closeStream(Surface surface) {
+    public void closeStream(Object unusedSurface) {
         Log.i(TAG, "surfaceDestroyed: ");
         //Close media stream
         if (handleList != null) {

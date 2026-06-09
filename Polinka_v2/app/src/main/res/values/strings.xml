@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Polinav3</string>
+    <string name="status_waiting">Czekam na polaczenie z robotem...</string>
+    <string name="status_camera_ready">Kamera robota aktywna</string>
+    <string name="status_obstacle">Uwaga, przeszkoda</string>
     <string name="button_test">UwU</string>
     <string name="button_test2">Shake hands</string>
     <string name="button_test3">Shake head</string>
